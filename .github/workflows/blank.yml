@@ -1,0 +1,51 @@
+#include <ArrayMultiColSort.au3>
+
+#Region Init
+;Source data to be sorted, any 2D array.
+Local $testfilearray1[3][3] = [["123", "321", "-1"], ["123", "-31", "13"], ["123", "-321", "-12"]]
+;Must come anywhere after line above, but before loops below.
+Local $testsize = UBound($testfilearray1) - 1
+;Must predetermine the sorting format.
+Global $aSortData[][] = [[1, 0], [2, 0]]
+#EndRegion Init
+
+
+#Region Add Pad
+;Sorry, I'd explain, but even after only a few hours, I've already forgotten whay most of this does.
+Local $col1max = _ArrayMax($testfilearray1, 1, -1, -1, 1)
+Local $col2max = _ArrayMax($testfilearray1, 1, -1, -1, 2)
+Local $col1maxdig = StringLen($col1max)
+Local $col2maxdig = StringLen($col2max)
+Local $sorttotalcount = UBound($aSortData) - 1
+For $sortcount = 0 To $sorttotalcount Step 1
+    Local $colnum = $aSortData[$sortcount][0]
+    For $testfilerownum2 = 0 To $testsize Step 1
+        Local $neg1 = StringSplit($testfilearray1[$testfilerownum2][$colnum], "")
+        If $neg1[1] = "-" Then
+            Local $neg1testfile = StringSplit($testfilearray1[$testfilerownum2][$colnum], "-")
+            Local $testcol1dig = StringLen($neg1testfile[2])
+        Else
+            Local $testcol1dig = StringLen($testfilearray1[$testfilerownum2][$colnum])
+        EndIf
+        While $testcol1dig < $col1maxdig
+            Local $neg1 = StringSplit($testfilearray1[$testfilerownum2][$colnum], "")
+            If $neg1[1] = "-" Then
+                Local $neg1testfile = StringSplit($testfilearray1[$testfilerownum2][$colnum], "-")
+                $testfilearray1[$testfilerownum2][$colnum] = "-0" & $neg1testfile[2]
+                Local $testcol1dig = StringLen($neg1testfile[2])
+            Else
+                $testfilearray1[$testfilerownum2][$colnum] = "0" & $testfilearray1[$testfilerownum2][$colnum]
+                Local $testcol1dig = StringLen($testfilearray1[$testfilerownum2][$colnum])
+            EndIf
+            Local $neg1 = StringSplit($testfilearray1[$testfilerownum2][$colnum], "")
+            If $neg1[1] = "-" Then
+                Local $neg1testfile = StringSplit($testfilearray1[$testfilerownum2][$colnum], "-")
+                Local $testcol1dig = StringLen($neg1testfile[2])
+            Else
+                Local $testcol1dig = StringLen($testfilearray1[$testfilerownum2][$colnum])
+            EndIf
+        WEnd
+    Next
+Next
+_ArrayDisplay($testfilearray1, "$testfilearray1")
+#EndRegion Add Pad
